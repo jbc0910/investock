@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { createProducto } from '../actions'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { ImageUploader } from '@/components/ui/ImageUploader'
 
 export default async function NuevoProductoPage() {
   const supabase = await createClient()
@@ -9,7 +10,6 @@ export default async function NuevoProductoPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  // Obtener negocio
   const { data: negocio } = await supabase
     .from('negocios')
     .select('id')
@@ -18,7 +18,6 @@ export default async function NuevoProductoPage() {
   
   if (!negocio) return null
 
-  // Obtener categorías para el select
   const { data: categorias } = await supabase
     .from('categorias')
     .select('id, nombre')
@@ -35,7 +34,11 @@ export default async function NuevoProductoPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-xl p-6 md:p-8 shadow-2xl">
-        <form action={createProducto} className="flex flex-col gap-6">
+        <form action={createProducto} encType="multipart/form-data" className="flex flex-col gap-6">
+          {/* Imagen */}
+          <ImageUploader />
+
+          {/* Nombre */}
           <div>
             <label className="text-sm font-medium mb-1 block text-foreground/80" htmlFor="nombre">
               Nombre del Producto *
@@ -49,21 +52,20 @@ export default async function NuevoProductoPage() {
             />
           </div>
 
+          {/* Descripción */}
+          <div>
+            <label className="text-sm font-medium mb-1 block text-foreground/80" htmlFor="descripcion">
+              Descripción
+            </label>
+            <textarea
+              className="w-full rounded-md px-4 py-2.5 bg-background border border-border focus:border-primary outline-none transition-colors text-sm min-h-[100px] resize-y"
+              name="descripcion"
+              placeholder="Breve descripción del producto..."
+            ></textarea>
+          </div>
+
+          {/* Stock y Categoría */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="text-sm font-medium mb-1 block text-foreground/80" htmlFor="precio">
-                Precio ($) *
-              </label>
-              <input
-                className="w-full rounded-md px-4 py-2.5 bg-background border border-border focus:border-primary outline-none transition-colors text-sm"
-                name="precio"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="0.00"
-                required
-              />
-            </div>
             <div>
               <label className="text-sm font-medium mb-1 block text-foreground/80" htmlFor="stock">
                 Stock Inicial *
@@ -77,21 +79,20 @@ export default async function NuevoProductoPage() {
                 required
               />
             </div>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-1 block text-foreground/80" htmlFor="categoria_id">
-              Categoría
-            </label>
-            <select 
-              name="categoria_id"
-              className="w-full rounded-md px-4 py-2.5 bg-background border border-border focus:border-primary outline-none transition-colors text-sm text-foreground appearance-none"
-            >
-              <option value="">Selecciona una categoría...</option>
-              {categorias?.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.nombre}</option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block text-foreground/80" htmlFor="categoria_id">
+                Categoría
+              </label>
+              <select 
+                name="categoria_id"
+                className="w-full rounded-md px-4 py-2.5 bg-background border border-border focus:border-primary outline-none transition-colors text-sm text-foreground appearance-none"
+              >
+                <option value="">Sin categoría</option>
+                {categorias?.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 mt-4 pt-6 border-t border-border">

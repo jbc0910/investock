@@ -16,7 +16,7 @@ export default function ImportarPage() {
         <p className="text-foreground/70 mb-6 text-sm">
           Sube un archivo CSV con la lista de productos. Asegúrate de que el archivo tenga el siguiente formato (columnas):
           <br /><br />
-          <code className="bg-background px-2 py-1 rounded text-xs border border-border font-mono">Nombre, Precio, Stock, Categoría</code>
+          <code className="bg-background px-2 py-1 rounded text-xs border border-border font-mono">Nombre, Descripción, Stock</code>
         </p>
         
         <form action={importCSV} className="flex flex-col gap-6">

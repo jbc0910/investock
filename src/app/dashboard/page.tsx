@@ -118,7 +118,7 @@ export default async function DashboardPage({
               <tr>
                 <th className="px-6 py-3 font-medium text-foreground/70">Nombre</th>
                 <th className="px-6 py-3 font-medium text-foreground/70">Categoría</th>
-                <th className="px-6 py-3 font-medium text-foreground/70 text-right">Precio</th>
+                <th className="px-6 py-3 font-medium text-foreground/70">Descripción</th>
                 <th className="px-6 py-3 font-medium text-foreground/70 text-right">Stock</th>
                 <th className="px-6 py-3 font-medium text-foreground/70 text-right">Acciones</th>
               </tr>
@@ -133,7 +133,22 @@ export default async function DashboardPage({
               ) : (
                 productos?.map((prod) => (
                   <tr key={prod.id} className="border-b border-border last:border-0 hover:bg-surface-hover/50 transition-colors">
-                    <td className="px-6 py-4 font-medium">{prod.nombre}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {prod.imagen_url ? (
+                          <img
+                            src={prod.imagen_url}
+                            alt={prod.nombre}
+                            className="w-10 h-10 rounded-md object-cover border border-border flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-md bg-background border border-border flex items-center justify-center flex-shrink-0 text-foreground/30">
+                            <Package2 size={16} />
+                          </div>
+                        )}
+                        <span className="font-medium">{prod.nombre}</span>
+                      </div>
+                    </td>
                     <td className="px-6 py-4">
                       {prod.categorias ? (
                         <span className="bg-background border border-border px-2 py-1 rounded-md text-xs">
@@ -143,7 +158,7 @@ export default async function DashboardPage({
                         <span className="text-foreground/40 text-xs italic">Sin categoría</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right">${prod.precio}</td>
+                    <td className="px-6 py-4 text-foreground/60 text-sm max-w-xs truncate">{prod.descripcion || <span className="italic">Sin descripción</span>}</td>
                     <td className="px-6 py-4 text-right">
                       {prod.stock <= 0 ? (
                         <span className="text-red-500 font-bold bg-red-500/10 px-2 py-1 rounded-md text-xs">Agotado</span>

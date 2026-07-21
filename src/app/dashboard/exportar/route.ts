@@ -25,7 +25,7 @@ export async function GET() {
     .from('productos')
     .select(`
       nombre,
-      precio,
+      descripcion,
       stock,
       categorias (nombre)
     `)
@@ -37,14 +37,14 @@ export async function GET() {
   }
 
   // Generar CSV
-  const header = ['Nombre', 'Precio', 'Stock', 'Categoría'].join(',')
+  const header = ['Nombre', 'Descripción', 'Stock', 'Categoría'].join(',')
   const rows = productos.map(p => {
-    // Escapar comas en los nombres
     const nombre = `"${p.nombre.replace(/"/g, '""')}"`
+    const descripcion = p.descripcion ? `"${p.descripcion.replace(/"/g, '""')}"` : '""'
     const cat = Array.isArray(p.categorias) ? p.categorias[0] : p.categorias;
     const catNombre = cat ? (cat as any).nombre : '';
     const categoria = catNombre ? `"${catNombre.replace(/"/g, '""')}"` : '""'
-    return [nombre, p.precio, p.stock, categoria].join(',')
+    return [nombre, descripcion, p.stock, categoria].join(',')
   })
 
   const csv = [header, ...rows].join('\n')

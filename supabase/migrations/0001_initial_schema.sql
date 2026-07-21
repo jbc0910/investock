@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS productos (
   negocio_id UUID NOT NULL REFERENCES negocios(id) ON DELETE CASCADE,
   categoria_id UUID REFERENCES categorias(id) ON DELETE SET NULL,
   nombre TEXT NOT NULL,
-  precio NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  descripcion TEXT,
   stock INTEGER NOT NULL DEFAULT 0,
   imagen_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()

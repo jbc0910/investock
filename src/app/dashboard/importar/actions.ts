@@ -53,18 +53,17 @@ export async function importCSV(formData: FormData) {
     }
     cols.push(current)
 
-    // Formato esperado: Nombre, Precio, Stock, Categoría (Opcional, ignorado por simplicidad o buscar por ID)
-    // Para hacer la importación robusta, requeriremos Nombre, Precio, Stock
+    // Formato esperado: Nombre, Descripción, Stock
     if (cols.length >= 3) {
       const nombre = cols[0].trim()
-      const precio = parseFloat(cols[1])
+      const descripcion = cols[1].trim()
       const stock = parseInt(cols[2], 10)
       
       if (nombre) {
         productosToInsert.push({
           negocio_id: negocio.id,
           nombre,
-          precio: isNaN(precio) ? 0 : precio,
+          descripcion: descripcion || null,
           stock: isNaN(stock) ? 0 : stock
         })
       }

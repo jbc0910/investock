@@ -23,6 +23,7 @@ export async function createNegocio(formData: FormData) {
     ])
 
   if (error) {
+    console.error('Error insertando negocio:', error)
     if (error.code === '23505') {
       redirect('/onboarding?message=El+nombre+del+negocio+ya+está+en+uso')
     }
