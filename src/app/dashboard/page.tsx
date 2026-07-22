@@ -78,8 +78,9 @@ export default async function DashboardPage({
 
       {/* Lista de Productos */}
       <div className="bg-surface border border-border rounded-xl flex flex-col">
-        <div className="p-6 border-b border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
-          <form className="relative w-full sm:w-96">
+        <div className="p-4 md:p-6 border-b border-border flex flex-col gap-3">
+          {/* Fila 1: Buscador */}
+          <form className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50" size={18} />
             <input
               type="text"
@@ -89,25 +90,26 @@ export default async function DashboardPage({
               className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-md focus:border-primary outline-none transition-colors text-sm"
             />
           </form>
-          <div className="flex gap-2 w-full sm:w-auto">
+          {/* Fila 2: Botones */}
+          <div className="flex flex-wrap gap-2">
             <Link 
               href="/dashboard/exportar"
-              className="flex-1 sm:flex-none border border-border hover:bg-surface-hover text-center px-4 py-2 rounded-md transition-colors text-sm font-medium"
+              className="border border-border hover:bg-surface-hover text-center px-3 py-2 rounded-md transition-colors text-sm font-medium whitespace-nowrap"
             >
               Exportar
             </Link>
             <Link 
               href="/dashboard/importar"
-              className="flex-1 sm:flex-none border border-border hover:bg-surface-hover text-center px-4 py-2 rounded-md transition-colors text-sm font-medium"
+              className="border border-border hover:bg-surface-hover text-center px-3 py-2 rounded-md transition-colors text-sm font-medium whitespace-nowrap"
             >
               Importar
             </Link>
             <Link 
               href="/dashboard/productos/nuevo"
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md transition-colors text-sm font-medium"
+              className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-3 py-2 rounded-md transition-colors text-sm font-medium whitespace-nowrap ml-auto"
             >
               <Plus size={16} />
-              Nuevo Producto
+              <span>Nuevo Producto</span>
             </Link>
           </div>
         </div>
@@ -116,11 +118,11 @@ export default async function DashboardPage({
           <table className="w-full text-left text-sm">
             <thead className="bg-background border-b border-border">
               <tr>
-                <th className="px-6 py-3 font-medium text-foreground/70">Nombre</th>
-                <th className="px-6 py-3 font-medium text-foreground/70">Categoría</th>
-                <th className="px-6 py-3 font-medium text-foreground/70">Descripción</th>
-                <th className="px-6 py-3 font-medium text-foreground/70 text-right">Stock</th>
-                <th className="px-6 py-3 font-medium text-foreground/70 text-right">Acciones</th>
+                <th className="px-4 md:px-6 py-3 font-medium text-foreground/70">Nombre</th>
+                <th className="px-4 md:px-6 py-3 font-medium text-foreground/70 hidden sm:table-cell">Categoría</th>
+                <th className="px-4 md:px-6 py-3 font-medium text-foreground/70 hidden lg:table-cell">Descripción</th>
+                <th className="px-4 md:px-6 py-3 font-medium text-foreground/70 text-right">Stock</th>
+                <th className="px-4 md:px-6 py-3 font-medium text-foreground/70 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -133,23 +135,23 @@ export default async function DashboardPage({
               ) : (
                 productos?.map((prod) => (
                   <tr key={prod.id} className="border-b border-border last:border-0 hover:bg-surface-hover/50 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 md:px-6 py-4">
                       <div className="flex items-center gap-3">
                         {prod.imagen_url ? (
                           <img
                             src={prod.imagen_url}
                             alt={prod.nombre}
-                            className="w-10 h-10 rounded-md object-cover border border-border flex-shrink-0"
+                            className="w-9 h-9 rounded-md object-cover border border-border flex-shrink-0"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-md bg-background border border-border flex items-center justify-center flex-shrink-0 text-foreground/30">
-                            <Package2 size={16} />
+                          <div className="w-9 h-9 rounded-md bg-background border border-border flex items-center justify-center flex-shrink-0 text-foreground/30">
+                            <Package2 size={14} />
                           </div>
                         )}
-                        <span className="font-medium">{prod.nombre}</span>
+                        <span className="font-medium text-sm">{prod.nombre}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 md:px-6 py-4 hidden sm:table-cell">
                       {prod.categorias ? (
                         <span className="bg-background border border-border px-2 py-1 rounded-md text-xs">
                           {prod.categorias.nombre}
@@ -158,17 +160,17 @@ export default async function DashboardPage({
                         <span className="text-foreground/40 text-xs italic">Sin categoría</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-foreground/60 text-sm max-w-xs truncate">{prod.descripcion || <span className="italic">Sin descripción</span>}</td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 md:px-6 py-4 text-foreground/60 text-sm max-w-xs truncate hidden lg:table-cell">{prod.descripcion || <span className="italic">Sin descripción</span>}</td>
+                    <td className="px-4 md:px-6 py-4 text-right">
                       {prod.stock <= 0 ? (
                         <span className="text-red-500 font-bold bg-red-500/10 px-2 py-1 rounded-md text-xs">Agotado</span>
                       ) : prod.stock <= 5 ? (
-                        <span className="text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded-md text-xs">{prod.stock} (Bajo)</span>
+                        <span className="text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded-md text-xs">{prod.stock}</span>
                       ) : (
-                        <span>{prod.stock}</span>
+                        <span className="text-sm">{prod.stock}</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right space-x-2">
+                    <td className="px-4 md:px-6 py-4 text-right space-x-2">
                       <Link href={`/dashboard/productos/${prod.id}/editar`} className="text-primary hover:underline text-sm">Editar</Link>
                       <DeleteProductoButton id={prod.id} />
                     </td>
