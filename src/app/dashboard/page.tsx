@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { Plus, Search, AlertCircle, Package2 } from 'lucide-react'
-import { deleteProducto } from './productos/actions'
+import { DeleteProductoButton } from '@/components/ui/DeleteProductoButton'
 
 export default async function DashboardPage({
   searchParams,
@@ -170,12 +170,7 @@ export default async function DashboardPage({
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
                       <Link href={`/dashboard/productos/${prod.id}/editar`} className="text-primary hover:underline text-sm">Editar</Link>
-                      <form action={deleteProducto} className="inline-block">
-                        <input type="hidden" name="id" value={prod.id} />
-                        <button type="submit" className="text-red-500 hover:underline text-sm" onClick={(e) => {
-                          if(!confirm('¿Estás seguro de que deseas eliminar este producto?')) e.preventDefault()
-                        }}>Eliminar</button>
-                      </form>
+                      <DeleteProductoButton id={prod.id} />
                     </td>
                   </tr>
                 ))

@@ -34,7 +34,7 @@ export default async function NuevoProductoPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-xl p-6 md:p-8 shadow-2xl">
-        <form action={createProducto} encType="multipart/form-data" className="flex flex-col gap-6">
+        <form action={createProducto} className="flex flex-col gap-6">
           {/* Imagen */}
           <ImageUploader />
 

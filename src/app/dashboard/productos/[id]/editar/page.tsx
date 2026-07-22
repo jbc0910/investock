@@ -51,7 +51,7 @@ export default async function EditarProductoPage({
       </div>
 
       <div className="bg-surface border border-border rounded-xl p-6 md:p-8 shadow-2xl">
-        <form action={updateProducto} encType="multipart/form-data" className="flex flex-col gap-6">
+        <form action={updateProducto} className="flex flex-col gap-6">
           <input type="hidden" name="id" value={producto.id} />
           {/* Pasar la URL actual para poder eliminarla si se cambia */}
           <input type="hidden" name="imagen_actual" value={producto.imagen_url || ''} />
