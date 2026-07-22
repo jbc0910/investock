@@ -14,7 +14,7 @@ export default function ImportarPage() {
 
       <div className="bg-surface border border-border rounded-xl p-6 md:p-8 shadow-2xl">
         <p className="text-foreground/70 mb-6 text-sm">
-          Sube un archivo CSV con la lista de productos. Asegúrate de que el archivo tenga el siguiente formato (columnas):
+          Sube un archivo Excel (.xlsx) con la lista de productos. Asegúrate de que el archivo tenga la siguiente primera fila (cabeceras):
           <br /><br />
           <code className="bg-background px-2 py-1 rounded text-xs border border-border font-mono">Nombre, Descripción, Stock</code>
         </p>
@@ -30,10 +30,10 @@ export default function ImportarPage() {
               id="file"
               name="file"
               type="file"
-              accept=".csv"
+              accept=".xlsx, .xls"
               required
             />
-            <p className="text-xs text-foreground/50 mt-2">CSV (máx. 5MB)</p>
+            <p className="text-xs text-foreground/50 mt-2">Excel (.xlsx) (máx. 5MB)</p>
           </div>
 
           <div className="flex justify-end gap-3 mt-4 pt-6 border-t border-border">

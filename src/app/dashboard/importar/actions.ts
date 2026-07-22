@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import * as xlsx from 'xlsx'
 
 export async function importCSV(formData: FormData) {
   const file = formData.get('file') as File
@@ -21,52 +22,35 @@ export async function importCSV(formData: FormData) {
   
   if (!negocio) return redirect('/onboarding')
 
-  const text = await file.text()
-  const lines = text.split('\n').filter(line => line.trim().length > 0)
+  const arrayBuffer = await file.arrayBuffer()
+  const workbook = xlsx.read(arrayBuffer, { type: 'array' })
   
-  if (lines.length <= 1) return
+  const sheetName = workbook.SheetNames[0]
+  if (!sheetName) return
 
-  const headers = lines[0].split(',')
-  const rows = lines.slice(1)
+  const worksheet = workbook.Sheets[sheetName]
+  // Parse as array of objects
+  const rows = xlsx.utils.sheet_to_json(worksheet, { defval: '' }) as any[]
+  
+  if (rows.length === 0) return
 
   const productosToInsert = []
 
-  // Un analizador básico de CSV
   for (const row of rows) {
-    const cols = []
-    let current = ''
-    let inQuotes = false
+    // Expected headers from export: Nombre, Descripción, Stock, Categoría
+    // (We will ignore Categoría for now in the import as it's complex to match strings to IDs without a lookup)
+    const nombre = row['Nombre']?.toString().trim()
+    const descripcion = row['Descripción']?.toString().trim() || row['Descripcion']?.toString().trim()
+    const stockRaw = row['Stock']
+    const stock = parseInt(stockRaw, 10)
     
-    for (let i = 0; i < row.length; i++) {
-      const char = row[i]
-      if (char === '"' && row[i+1] === '"') {
-        current += '"'
-        i++ // saltar la doble comilla
-      } else if (char === '"') {
-        inQuotes = !inQuotes
-      } else if (char === ',' && !inQuotes) {
-        cols.push(current)
-        current = ''
-      } else {
-        current += char
-      }
-    }
-    cols.push(current)
-
-    // Formato esperado: Nombre, Descripción, Stock
-    if (cols.length >= 3) {
-      const nombre = cols[0].trim()
-      const descripcion = cols[1].trim()
-      const stock = parseInt(cols[2], 10)
-      
-      if (nombre) {
-        productosToInsert.push({
-          negocio_id: negocio.id,
-          nombre,
-          descripcion: descripcion || null,
-          stock: isNaN(stock) ? 0 : stock
-        })
-      }
+    if (nombre) {
+      productosToInsert.push({
+        negocio_id: negocio.id,
+        nombre,
+        descripcion: descripcion || null,
+        stock: isNaN(stock) ? 0 : stock
+      })
     }
   }
 

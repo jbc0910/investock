@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
+import * as xlsx from 'xlsx'
 
 export async function GET() {
   const supabase = await createClient()
@@ -36,23 +37,30 @@ export async function GET() {
     return new NextResponse('No hay productos', { status: 404 })
   }
 
-  // Generar CSV
-  const header = ['Nombre', 'Descripción', 'Stock', 'Categoría'].join(',')
-  const rows = productos.map(p => {
-    const nombre = `"${p.nombre.replace(/"/g, '""')}"`
-    const descripcion = p.descripcion ? `"${p.descripcion.replace(/"/g, '""')}"` : '""'
+  // Preparar datos para Excel
+  const excelData = productos.map(p => {
     const cat = Array.isArray(p.categorias) ? p.categorias[0] : p.categorias;
     const catNombre = cat ? (cat as any).nombre : '';
-    const categoria = catNombre ? `"${catNombre.replace(/"/g, '""')}"` : '""'
-    return [nombre, descripcion, p.stock, categoria].join(',')
+    
+    return {
+      Nombre: p.nombre,
+      Descripción: p.descripcion || '',
+      Stock: p.stock,
+      Categoría: catNombre
+    }
   })
 
-  const csv = [header, ...rows].join('\n')
+  // Generar Excel
+  const worksheet = xlsx.utils.json_to_sheet(excelData)
+  const workbook = xlsx.utils.book_new()
+  xlsx.utils.book_append_sheet(workbook, worksheet, 'Inventario')
+  
+  const buf = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' })
 
-  return new NextResponse(csv, {
+  return new NextResponse(buf, {
     headers: {
-      'Content-Type': 'text/csv; charset=utf-8',
-      'Content-Disposition': `attachment; filename="inventario_${negocio.nombre.replace(/\s+/g, '_').toLowerCase()}.csv"`,
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="inventario_${negocio.nombre.replace(/\s+/g, '_').toLowerCase()}.xlsx"`,
     },
   })
 }
