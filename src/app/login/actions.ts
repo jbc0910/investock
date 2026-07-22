@@ -15,7 +15,8 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect('/login?message=Credenciales+inválidas')
+    console.error('Login error:', error)
+    redirect(`/login?message=Error: ${error.message}`)
   }
 
   revalidatePath('/', 'layout')
@@ -30,10 +31,16 @@ export async function signup(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  const { error, data: signUpData } = await supabase.auth.signUp(data)
 
   if (error) {
-    redirect('/login?message=Error+al+registrar+el+usuario')
+    console.error('Signup error:', error)
+    redirect(`/login?message=Error: ${error.message}`)
+  }
+
+  // If email confirmation is enabled, a session might not be created immediately
+  if (!signUpData.session) {
+    redirect('/login?message=Revisa+tu+correo+para+confirmar+tu+cuenta')
   }
 
   revalidatePath('/', 'layout')
