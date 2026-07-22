@@ -8,7 +8,7 @@ export function AuthForm({ message }: { message?: string }) {
 
   return (
     <div className="w-full max-w-md bg-surface border border-border p-8 rounded-xl shadow-2xl transition-all">
-      <h1 className="text-3xl font-bold mb-2 text-center">Premium Nocturnal</h1>
+      <h1 className="text-3xl font-bold mb-2 text-center">Investock</h1>
       <p className="text-center text-foreground/70 mb-8 text-balance">
         {isLogin ? 'Inicia sesión para gestionar tu inventario' : 'Crea una cuenta nueva para tu negocio'}
       </p>
