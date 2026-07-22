@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Tags, LogOut, ChevronRight, PanelLeftClose } from 'lucide-react'
+import { LayoutDashboard, Tags, LogOut, ChevronRight, AlertCircle } from 'lucide-react'
 
 interface Props {
   negocioNombre: string
@@ -65,6 +65,14 @@ export function Sidebar({ negocioNombre, userInitial }: Props) {
         >
           <Tags size={20} className="shrink-0" />
           {!collapsed && <span className="truncate">Categorías</span>}
+        </Link>
+        <Link
+          href="/dashboard/agotados"
+          title="Agotados"
+          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-red-500/80 hover:text-red-500 transition-colors font-medium ${collapsed ? 'justify-center' : ''}`}
+        >
+          <AlertCircle size={20} className="shrink-0" />
+          {!collapsed && <span className="truncate">Agotados</span>}
         </Link>
       </nav>
 

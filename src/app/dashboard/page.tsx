@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { Plus, Search, AlertCircle, Package2 } from 'lucide-react'
 import { DeleteProductoButton } from '@/components/ui/DeleteProductoButton'
+import { StockAdjuster } from '@/components/ui/StockAdjuster'
 
 export default async function DashboardPage({
   searchParams,
@@ -65,15 +66,15 @@ export default async function DashboardPage({
             <h3 className="text-3xl font-bold">{totalProductos || 0}</h3>
           </div>
         </div>
-        <div className="bg-surface border border-border p-6 rounded-xl flex items-center gap-4">
-          <div className="p-4 bg-red-500/10 text-red-500 rounded-lg">
+        <Link href="/dashboard/agotados" className="bg-surface border border-border p-6 rounded-xl flex items-center gap-4 hover:bg-surface-hover hover:border-red-500/50 transition-colors group cursor-pointer">
+          <div className="p-4 bg-red-500/10 text-red-500 rounded-lg group-hover:scale-110 transition-transform">
             <AlertCircle size={24} />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground/60">Agotados</p>
+            <p className="text-sm font-medium text-foreground/60 group-hover:text-foreground/80 transition-colors">Agotados (Ver todos)</p>
             <h3 className="text-3xl font-bold">{agotados || 0}</h3>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Lista de Productos */}
@@ -162,13 +163,7 @@ export default async function DashboardPage({
                     </td>
                     <td className="px-4 md:px-6 py-4 text-foreground/60 text-sm max-w-xs truncate hidden lg:table-cell">{prod.descripcion || <span className="italic">Sin descripción</span>}</td>
                     <td className="px-4 md:px-6 py-4 text-right">
-                      {prod.stock <= 0 ? (
-                        <span className="text-red-500 font-bold bg-red-500/10 px-2 py-1 rounded-md text-xs">Agotado</span>
-                      ) : prod.stock <= 5 ? (
-                        <span className="text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded-md text-xs">{prod.stock}</span>
-                      ) : (
-                        <span className="text-sm">{prod.stock}</span>
-                      )}
+                      <StockAdjuster id={prod.id} currentStock={prod.stock} />
                     </td>
                     <td className="px-4 md:px-6 py-4 text-right space-x-2">
                       <Link href={`/dashboard/productos/${prod.id}/editar`} className="text-primary hover:underline text-sm">Editar</Link>
