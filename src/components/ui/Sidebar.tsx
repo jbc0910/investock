@@ -43,7 +43,7 @@ export function Sidebar({ negocioNombre, userInitial }: Props) {
         ) : (
           <>
             <h2 className="text-xl font-bold truncate text-primary">{negocioNombre}</h2>
-            <p className="text-sm text-foreground/50 mt-0.5">Premium Nocturnal</p>
+            <p className="text-sm text-foreground/50 mt-0.5">Investock</p>
           </>
         )}
       </div>

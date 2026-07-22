@@ -13,8 +13,8 @@ const hankenGrotesk = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Premium Nocturnal | Inventory SaaS",
-  description: "Plataforma SaaS multi-inquilino de gestión de inventario",
+  title: "Investock | Inventory Manager",
+  description: "Plataforma de gestión de inventario",
 };
 
 export default function RootLayout({
