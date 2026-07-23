@@ -33,14 +33,6 @@ export function AuthForm({ message }: { message?: string }) {
             <label className="text-sm font-medium" htmlFor="password">
               Contraseña
             </label>
-            {isLogin && (
-              <Link
-                href="/forgot-password"
-                className="text-xs text-foreground/50 hover:text-primary transition-colors"
-              >
-                ¿Olvidaste la contraseña?
-              </Link>
-            )}
           </div>
           <input
             className="w-full rounded-md px-4 py-2.5 bg-background border border-border focus:border-primary outline-none transition-colors"
