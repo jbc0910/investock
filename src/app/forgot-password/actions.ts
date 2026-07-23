@@ -1,38 +1,33 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
-export async function sendPasswordResetEmail(formData: FormData) {
+export async function sendPasswordResetEmail(email: string) {
   try {
-    const email = formData.get('email') as string
     console.log('[ForgotPassword] Action started for email:', email)
 
     if (!email?.trim()) {
-      return redirect('/forgot-password?message=El+correo+es+requerido')
+      return { error: 'El correo es requerido' }
     }
 
     const supabase = await createClient()
     console.log('[ForgotPassword] Supabase client created')
 
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      // Configura esta URL en Supabase → Authentication → URL Configuration → Redirect URLs
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/account?tab=password`,
     })
 
     if (error) {
       console.error('[ForgotPassword] Supabase error:', error)
-      return redirect(`/forgot-password?message=Error:+${encodeURIComponent(error.message)}`)
+      return { error: error.message }
     }
 
     console.log('[ForgotPassword] Email sent successfully')
-    return redirect('/forgot-password?sent=true')
+    return { success: true }
   } catch (err: unknown) {
     const error = err as Error;
-    // Si es un error de redirección de Next.js, lo dejamos pasar
-    if (error.message === 'NEXT_REDIRECT') {
-      throw err;
-    }
     console.error('[ForgotPassword] Unexpected error:', err)
-    return redirect(`/forgot-password?message=Error+interno:+${encodeURIComponent(error.message || 'Desconocido')}`)
+    return { error: `Error interno: ${error.message || 'Desconocido'}` }
   }
 }
