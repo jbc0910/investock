@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { login, signup } from './actions'
 
 export function AuthForm({ message }: { message?: string }) {
@@ -28,9 +29,19 @@ export function AuthForm({ message }: { message?: string }) {
         </div>
         
         <div className="mb-2">
-          <label className="text-sm font-medium mb-1 block" htmlFor="password">
-            Contraseña
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-sm font-medium" htmlFor="password">
+              Contraseña
+            </label>
+            {isLogin && (
+              <Link
+                href="/forgot-password"
+                className="text-xs text-foreground/50 hover:text-primary transition-colors"
+              >
+                ¿Olvidaste la contraseña?
+              </Link>
+            )}
+          </div>
           <input
             className="w-full rounded-md px-4 py-2.5 bg-background border border-border focus:border-primary outline-none transition-colors"
             type="password"

@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Tags, LogOut, ChevronRight, AlertCircle } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { LayoutDashboard, Tags, LogOut, ChevronRight, AlertCircle, Settings } from 'lucide-react'
 
 interface Props {
   negocioNombre: string
@@ -11,6 +12,7 @@ interface Props {
 
 export function Sidebar({ negocioNombre, userInitial }: Props) {
   const [collapsed, setCollapsed] = useState(true)
+  const pathname = usePathname()
 
   return (
     <aside
@@ -53,7 +55,7 @@ export function Sidebar({ negocioNombre, userInitial }: Props) {
         <Link
           href="/dashboard"
           title="Inventario"
-          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-foreground/80 hover:text-foreground transition-colors font-medium ${collapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-foreground/80 hover:text-foreground transition-colors font-medium ${collapsed ? 'justify-center' : ''} ${pathname === '/dashboard' ? 'bg-surface-hover text-foreground' : ''}`}
         >
           <LayoutDashboard size={20} className="shrink-0" />
           {!collapsed && <span className="truncate">Inventario</span>}
@@ -61,7 +63,7 @@ export function Sidebar({ negocioNombre, userInitial }: Props) {
         <Link
           href="/dashboard/categorias"
           title="Categorías"
-          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-foreground/80 hover:text-foreground transition-colors font-medium ${collapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-foreground/80 hover:text-foreground transition-colors font-medium ${collapsed ? 'justify-center' : ''} ${pathname === '/dashboard/categorias' ? 'bg-surface-hover text-foreground' : ''}`}
         >
           <Tags size={20} className="shrink-0" />
           {!collapsed && <span className="truncate">Categorías</span>}
@@ -69,15 +71,32 @@ export function Sidebar({ negocioNombre, userInitial }: Props) {
         <Link
           href="/dashboard/agotados"
           title="Agotados"
-          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-red-500/80 hover:text-red-500 transition-colors font-medium ${collapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 px-3 py-3 rounded-md hover:bg-surface-hover text-red-500/80 hover:text-red-500 transition-colors font-medium ${collapsed ? 'justify-center' : ''} ${pathname === '/dashboard/agotados' ? 'bg-red-950/20 text-red-500' : ''}`}
         >
           <AlertCircle size={20} className="shrink-0" />
           {!collapsed && <span className="truncate">Agotados</span>}
         </Link>
       </nav>
 
-      {/* Footer / Sign out */}
-      <div className={`p-2 border-t border-border`}>
+      {/* Footer / Configuración + Sign out */}
+      <div className="p-2 border-t border-border space-y-1">
+        {/* Configuración de cuenta */}
+        <Link
+          href="/account"
+          title="Configuración de cuenta"
+          className={`
+            flex items-center gap-3 px-3 py-3 rounded-md
+            hover:bg-surface-hover text-foreground/60 hover:text-foreground
+            transition-colors font-medium
+            ${collapsed ? 'justify-center' : ''}
+            ${pathname?.startsWith('/account') ? 'bg-surface-hover text-foreground' : ''}
+          `}
+        >
+          <Settings size={20} className="shrink-0" />
+          {!collapsed && <span className="truncate">Configuración</span>}
+        </Link>
+
+        {/* Cerrar sesión */}
         <form action="/auth/signout" method="post">
           <button
             title="Cerrar Sesión"
@@ -91,3 +110,4 @@ export function Sidebar({ negocioNombre, userInitial }: Props) {
     </aside>
   )
 }
+
