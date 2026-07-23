@@ -1,6 +1,4 @@
-// El especificador npm: es válido en Deno pero el TypeScript server del IDE lo marca como error.
-// El código funciona correctamente al hacer deploy con: supabase functions deploy delete-account
-// deno-lint-ignore-file no-explicit-any
+
 import { createClient } from '@supabase/supabase-js'
 
 // Esta Edge Function elimina un usuario autenticado usando la service_role key.
