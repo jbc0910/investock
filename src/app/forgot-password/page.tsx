@@ -49,7 +49,7 @@ export default async function ForgotPasswordPage({
           </div>
         ) : (
           /* ── Formulario ── */
-          <form className="flex flex-col gap-4">
+          <form action={sendPasswordResetEmail} className="flex flex-col gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block" htmlFor="email">
                 Correo Electrónico
@@ -71,7 +71,7 @@ export default async function ForgotPasswordPage({
             )}
 
             <button
-              formAction={sendPasswordResetEmail}
+              type="submit"
               className="w-full bg-primary hover:bg-primary-hover text-white rounded-md px-4 py-2.5 transition-colors font-semibold"
             >
               Enviar enlace de recuperación
